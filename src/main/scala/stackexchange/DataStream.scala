@@ -1,0 +1,5 @@
+package stackexchange
+
+class DataStream {
+
+}
