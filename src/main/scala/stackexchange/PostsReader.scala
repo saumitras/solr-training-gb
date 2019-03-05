@@ -54,8 +54,8 @@ class PostsReader(site:String) extends App {
 
         val tagsIndex = vn.getAttrVal("Tags")
         val tags = if(tagsIndex == -1) None else
-          Some(vn.toNormalizedString(tagsIndex).replaceAll("&lt;","").split("&gt;").filter(_.nonEmpty).toList)
-
+          Some(vn.toNormalizedString(tagsIndex).replaceAll("""&lt;""","").replaceAll("""<""","").split(">").filter(_.nonEmpty).toList)
+        
         val parentIdIndex = vn.getAttrVal("ParentId")
         val parentId = if(parentIdIndex == -1) None else Some(vn.toNormalizedString(parentIdIndex))
 
