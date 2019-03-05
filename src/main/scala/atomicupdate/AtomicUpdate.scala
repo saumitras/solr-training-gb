@@ -1,0 +1,5 @@
+package atomicupdate
+
+class AtomicUpdate {
+
+}

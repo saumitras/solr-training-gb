@@ -1,0 +1,5 @@
+package replicarules
+
+class RuleBasedReplica {
+
+}

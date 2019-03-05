@@ -1,0 +1,5 @@
+package autosuggest
+
+class MoreLikeThis {
+
+}

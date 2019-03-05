@@ -1,0 +1,5 @@
+package cdcr
+
+class ClusterAdmin {
+
+}

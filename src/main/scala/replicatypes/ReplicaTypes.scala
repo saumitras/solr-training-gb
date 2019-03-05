@@ -1,0 +1,5 @@
+package replicatypes
+
+class ReplicaTypes {
+
+}

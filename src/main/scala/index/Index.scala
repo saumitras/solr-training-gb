@@ -49,9 +49,9 @@ object Index extends App {
 
     //commit the changes
     println("Committing the changes")
-    client.commit()
 
-    client.commit(false, false, true)
+    //client.commit()                             //hardcommit
+    client.commit(false, false, true)         //softcommit
 
     //close client connection
     println("Closing solr client connection")

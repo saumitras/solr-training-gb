@@ -1,0 +1,5 @@
+package copydocs
+
+class MigrateCollection {
+
+}

@@ -1,0 +1,5 @@
+package blockjoin
+
+class NestedDocs {
+
+}

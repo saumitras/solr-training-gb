@@ -1,0 +1,5 @@
+package curator
+
+class Util {
+
+}

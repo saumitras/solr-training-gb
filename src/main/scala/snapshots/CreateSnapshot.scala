@@ -1,0 +1,5 @@
+package snapshots
+
+class CreateSnapshot {
+
+}

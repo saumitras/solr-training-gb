@@ -1,0 +1,5 @@
+package autoscaling
+
+class AutoScaling {
+
+}
