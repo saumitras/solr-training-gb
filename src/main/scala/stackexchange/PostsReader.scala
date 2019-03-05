@@ -6,6 +6,7 @@ import java.sql.{Date, Timestamp}
 import java.text.SimpleDateFormat
 
 import common.Types.StackPost
+import org.apache.commons.io.IOUtils
 
 import scala.collection.mutable.ListBuffer
 
@@ -21,7 +22,7 @@ class PostsReader(site:String) extends App {
     println("Reading posts for site=$site")
 
     val startTime = System.currentTimeMillis()
-    val data = Files.readAllBytes(Paths.get(getClass.getResource(s"/dataset/$site/Posts.xml").toURI))
+    val data = IOUtils.toByteArray(getClass.getResourceAsStream(s"/dataset/$site/Posts.xml"))
     val posts = processPosts(data)
     val totalTime = System.currentTimeMillis() - startTime
     println(s"Processed ${posts.size} posts in $totalTime ms")
@@ -55,7 +56,7 @@ class PostsReader(site:String) extends App {
         val tagsIndex = vn.getAttrVal("Tags")
         val tags = if(tagsIndex == -1) None else
           Some(vn.toNormalizedString(tagsIndex).replaceAll("""&lt;""","").replaceAll("""<""","").split(">").filter(_.nonEmpty).toList)
-        
+
         val parentIdIndex = vn.getAttrVal("ParentId")
         val parentId = if(parentIdIndex == -1) None else Some(vn.toNormalizedString(parentIdIndex))
 

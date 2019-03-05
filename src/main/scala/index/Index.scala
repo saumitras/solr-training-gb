@@ -5,7 +5,6 @@ import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
 import collection.JavaConverters._
-import collection.JavaConversions._
 import org.apache.solr.client.solrj.impl.CloudSolrClient
 import org.apache.solr.client.solrj.impl.HttpSolrClient
 import org.apache.solr.common.SolrInputDocument
@@ -44,7 +43,7 @@ object Index extends App {
     }*/
 
     //....OR batch multiple docs
-    val docs = posts.map(postToSolrDoc)
+    val docs = posts.map(postToSolrDoc).asJavaCollection
     client.add(docs)
 
     //commit the changes

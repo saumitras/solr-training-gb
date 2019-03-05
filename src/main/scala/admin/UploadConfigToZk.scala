@@ -4,6 +4,7 @@ import java.io.File
 import java.nio.file.Paths
 
 import common.AppConfig
+import org.apache.commons.io.IOUtils
 
 import collection.JavaConverters._
 import collection.JavaConversions._
@@ -22,8 +23,7 @@ object UploadConfigToZk extends App {
   println("Getting configset from resources")
   val CONFIGSET_NAME = "config1"
   val CONFIGSET_LOCATION = "/configset/conf1/"
-  val configSetPath = Paths.get(getClass.getResource(CONFIGSET_LOCATION).toURI)
-  //new File(CONFIGSET_LOCATION).toPath
+  val configSetPath = new File("src/main/resources/" + CONFIGSET_LOCATION).toPath
 
   //upload named configSet
   println("Uploading config")
