@@ -1,12 +1,12 @@
 <requestHandler name="/gbsearch" class="solr.SearchHandler">
 
     <lst name="defaults">
-        <int name="sort">namespace_id desc</int>
+        <int name="sort">id desc</int>
         <int name="rows">10</int>
     </lst>
 
     <lst name="appends">
-        <str name="fq">NOT sysid1:""</str>
+        <str name="fq">NOT body:""</str>
     </lst>
 
     <lst name="invariants">

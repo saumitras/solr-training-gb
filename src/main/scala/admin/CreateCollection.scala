@@ -4,17 +4,18 @@ import collection.JavaConverters._
 import collection.JavaConversions._
 import org.apache.solr.client.solrj.impl.CloudSolrClient
 import org.apache.solr.client.solrj.request.CollectionAdminRequest
+import common.AppConfig
 
 object CreateCollection extends App {
 
   //create solrcloud client
   println("Connecting to zk")
-  val ZK_HOST = "localhost:2181/gb1"
+  val ZK_HOST = AppConfig.ZK_HOST
   val client = new CloudSolrClient.Builder().withZkHost(ZK_HOST).build
 
   //get collection creation request
-  val NEW_COLLECTION_NAME = "col32"
-  val CONFIGSET_NAME = "config1"
+  val NEW_COLLECTION_NAME = AppConfig.COLLECTION_NAME
+  val CONFIGSET_NAME = "stackoverflow"
   val NUM_SHARDS = 1
   val NUM_REPLICAS = 1
   val createReq = CollectionAdminRequest.createCollection(NEW_COLLECTION_NAME, CONFIGSET_NAME, NUM_SHARDS, NUM_REPLICAS)

@@ -3,6 +3,8 @@ package admin
 import java.io.File
 import java.nio.file.Paths
 
+import common.AppConfig
+
 import collection.JavaConverters._
 import collection.JavaConversions._
 import org.apache.solr.client.solrj.impl.{CloudSolrClient, ZkClientClusterStateProvider}
@@ -11,8 +13,8 @@ object UploadConfigToZk extends App {
 
   //get zk state provider object
   println("Connecting to zk...")
-  val ZK_HOST = Seq("localhost:2181").asJavaCollection
-  val CH_ROOT = "/gb1"
+  val ZK_HOST = AppConfig.ZK_HOST.split(",").toSeq.asJavaCollection  //Seq("localhost:2181","localhost:2182","localhost:2183").asJavaCollection
+  val CH_ROOT = AppConfig.ZK_CHROOT
   val zkStateManager = new ZkClientClusterStateProvider(ZK_HOST, CH_ROOT)
   zkStateManager.connect()
 

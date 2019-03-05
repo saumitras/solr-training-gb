@@ -2,25 +2,34 @@ package stackexchange
 
 import com.ximpleware.{AutoPilot, VTDGen}
 import java.nio.file.{Files, Paths}
-import java.sql.Timestamp
+import java.sql.{Date, Timestamp}
+import java.text.SimpleDateFormat
+
+import common.Types.StackPost
 
 import scala.collection.mutable.ListBuffer
 
+class PostsReader(site:String) extends App {
 
-case class StackPost(id:String, postTypeId:String, creationDate:String, score:Int, body:String,
-                     ownerUserId:String, lastActivityDate:String, commentCount:Int)
+  //TODO: check for site existence
 
+  def getAllPosts() = {
+    getPostData()
+  }
 
-object PostsReader extends App {
+  private def getPostData() = {
+    println("Reading posts for site=$site")
 
-  val startTime = System.currentTimeMillis()
-  val data = Files.readAllBytes(Paths.get("/home/sam/training/solr/datasets/ai/Posts.xml"))
-  readFile(data)
-  val totalTime = System.currentTimeMillis() - startTime
-  println("Time in millisecond = " + totalTime)
+    val startTime = System.currentTimeMillis()
+    val data = Files.readAllBytes(Paths.get(getClass.getResource(s"/dataset/$site/Posts.xml").toURI))
+    val posts = processPosts(data)
+    val totalTime = System.currentTimeMillis() - startTime
+    println(s"Processed ${posts.size} posts in $totalTime ms")
+    posts
 
-  def readFile(data: Array[Byte]):List[StackPost] = {
+  }
 
+  private def processPosts(data: Array[Byte]):List[StackPost] = {
     val vg = new VTDGen()
     vg.setDoc(data)
     vg.parse(true)
@@ -43,15 +52,25 @@ object PostsReader extends App {
         val lastActivityDate = vn.toNormalizedString(vn.getAttrVal("LastActivityDate"))
         val commentCount = vn.toNormalizedString(vn.getAttrVal("CommentCount")).toInt
 
+        val tagsIndex = vn.getAttrVal("Tags")
+        val tags = if(tagsIndex == -1) None else
+          Some(vn.toNormalizedString(tagsIndex).replaceAll("&lt;","").split("&gt;").filter(_.nonEmpty).toList)
+
+        val parentIdIndex = vn.getAttrVal("ParentId")
+        val parentId = if(parentIdIndex == -1) None else Some(vn.toNormalizedString(parentIdIndex))
+
         val post = StackPost(
+          site = site,
           id = id,
           postTypeId = postTypeId,
-          creationDate = creationDate,
+          creationDate = strToTimestamp(creationDate),
           score = score,
           body = body,
           ownerUserId = ownerUserId,
-          lastActivityDate = lastActivityDate,
-          commentCount = commentCount
+          lastActivityDate = strToTimestamp(lastActivityDate),
+          commentCount = commentCount,
+          tags = tags,
+          parentId = parentId
         )
 
         println(s"Adding post id = $id")
@@ -64,11 +83,12 @@ object PostsReader extends App {
 
     }
 
-    ap.resetXPath
-
-    println(s"Processed ${posts.size} posts")
+    //ap.resetXPath
     posts.toList
 
   }
+
+
+  def strToTimestamp(dateStr:String) = new Timestamp(new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss.SSS").parse(dateStr).getTime)
 
 }

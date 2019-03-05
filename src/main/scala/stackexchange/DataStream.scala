@@ -1,5 +1,10 @@
 package stackexchange
 
-class DataStream {
+object DataStream {
+
+  def fetchAll() = {
+    val postsReader = new PostsReader("ai")
+    postsReader.getAllPosts()
+  }
 
 }

@@ -1,0 +1,5 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<posts>
+  <row Id="1" PostTypeId="1" AcceptedAnswerId="3" CreationDate="2016-08-02T15:39:14.947" Score="6" ViewCount="345" Body="&lt;p&gt;What does &quot;backprop&quot; mean? I've Googled it, but it's showing backpropagation.&lt;/p&gt;&#xA;&#xA;&lt;p&gt;Is the &quot;backprop&quot; term basically the same as &quot;backpropagation&quot; or does it have a different meaning?&lt;/p&gt;&#xA;" OwnerUserId="8" LastEditorUserId="10135" LastEditDate="2018-10-18T10:45:18.660" LastActivityDate="2018-10-18T10:45:18.660" Title="What is &quot;backprop&quot;?" Tags="&lt;neural-networks&gt;&lt;backpropagation&gt;&lt;terminology&gt;&lt;definitions&gt;" AnswerCount="3" CommentCount="3" FavoriteCount="1" />
+  <row Id="3" PostTypeId="2" ParentId="1" CreationDate="2016-08-02T15:40:24.820" Score="11" Body="&lt;p&gt;&quot;Backprop&quot; is the same as &quot;backpropagation&quot;: it's just a shorter way to say it. It is sometimes abbreviated as &quot;BP&quot;.&lt;/p&gt;&#xA;" OwnerUserId="4" LastActivityDate="2016-08-02T15:40:24.820" CommentCount="0" />
+</posts>
