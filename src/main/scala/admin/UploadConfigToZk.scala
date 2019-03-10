@@ -1,14 +1,10 @@
 package admin
 
 import java.io.File
-import java.nio.file.Paths
+import collection.JavaConverters._
+import org.apache.solr.client.solrj.impl.{CloudSolrClient, ZkClientClusterStateProvider}
 
 import common.AppConfig
-import org.apache.commons.io.IOUtils
-
-import collection.JavaConverters._
-import collection.JavaConversions._
-import org.apache.solr.client.solrj.impl.{CloudSolrClient, ZkClientClusterStateProvider}
 
 object UploadConfigToZk extends App {
 
@@ -21,8 +17,8 @@ object UploadConfigToZk extends App {
 
   //get configSet as Path
   println("Getting configset from resources")
-  val CONFIGSET_NAME = "config1"
-  val CONFIGSET_LOCATION = "/configset/conf1/"
+  val CONFIGSET_NAME = "stackoverflow"
+  val CONFIGSET_LOCATION = "/configset/stackoverflow/"
   val configSetPath = new File("src/main/resources/" + CONFIGSET_LOCATION).toPath
 
   //upload named configSet

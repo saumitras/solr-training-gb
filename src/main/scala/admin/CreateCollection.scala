@@ -10,7 +10,7 @@ object CreateCollection extends App {
 
   //create solrcloud client
   println("Connecting to zk")
-  val ZK_HOST = AppConfig.ZK_HOST
+  val ZK_HOST = AppConfig.ZK_HOST + AppConfig.ZK_CHROOT
   val client = new CloudSolrClient.Builder().withZkHost(ZK_HOST).build
 
   //get collection creation request
@@ -24,5 +24,7 @@ object CreateCollection extends App {
   println("Creating collection. Query = " + createReq.getParams)
   val resp = client.request(createReq)
   println(resp)
+
+  println("Done")
 
 }
