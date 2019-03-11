@@ -118,13 +118,13 @@
          If you don't need it, consider removing it and the corresponding copyField directive.
     -->
     <field name="id" 				type="string" 	indexed="true" stored="true" required="true"    multiValued="false" />
-    <field name="postType" 			type="string" 	indexed="true" stored="true" required="true"    multiValued="false" />
-    <field name="creationDate" 		type="tdate" 	indexed="true" stored="true" required="true"    multiValued="false" docValues="true" />
-    <field name="score" 			type="tint" 	indexed="true" stored="true" required="true"    multiValued="false" />
+    <field name="postType" 			type="string" 	indexed="true" stored="true" required="false"    multiValued="false" />
+    <field name="creationDate" 		type="tdate" 	indexed="true" stored="true" required="false"    multiValued="false" docValues="true" />
+    <field name="postScore" 		type="tint" 	indexed="true" stored="true" required="false"    multiValued="false" />
     <field name="body" 				type="text_en" 	indexed="true" stored="true" required="true"    multiValued="true"  />
-    <field name="owner" 			type="string" 	indexed="true" stored="true" required="true"    multiValued="false" />
-    <field name="lastActivityDate" 	type="tdate" 	indexed="true" stored="true" required="true"    multiValued="false" />
-    <field name="commentCount" 		type="tint" 	indexed="true" stored="true" required="true"    multiValued="false" />
+    <field name="owner" 			type="string" 	indexed="true" stored="true" required="false"    multiValued="false" />
+    <field name="lastActivityDate" 	type="tdate" 	indexed="true" stored="true" required="false"    multiValued="false" />
+    <field name="commentCount" 		type="tint" 	indexed="true" stored="true" required="false"    multiValued="false" />
 	<field name="tags" 			    type="string" 	indexed="true" stored="true" required="false"   multiValued="true"  />
 	<field name="parentId" 			type="string" 	indexed="true" stored="true" required="false"   multiValued="true"  />
 

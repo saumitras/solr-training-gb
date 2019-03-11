@@ -63,7 +63,7 @@ object MinRf extends App {
     doc.setField("id", p.site + p.id)
     doc.setField("postType", if(p.postTypeId == "1") "Q" else "A")
     doc.setField("creationDate", getSolrDate(p.creationDate))
-    doc.setField("score", p.score)
+    doc.setField("postScore", p.score)
     doc.setField("body", p.body)
     doc.setField("owner", p.ownerUserId)
     doc.setField("lastActivityDate", getSolrDate(p.lastActivityDate))

@@ -15,7 +15,7 @@ import stackexchange.DataStream
 
 object Index extends App {
 
-  val ZK_HOST = AppConfig.ZK_HOST
+  val ZK_HOST = AppConfig.ZK_HOST + AppConfig.ZK_CHROOT
   val SOLR_CORE_URL = AppConfig.SOLR_HOST + AppConfig.CORE_NAME
 
   start()
@@ -23,11 +23,11 @@ object Index extends App {
   def start() = {
     println("Creating solr client")
     //create cloud client
-    //val client = new CloudSolrClient.Builder().withZkHost(ZK_HOST).build
-    //client.setDefaultCollection("so_collection")
+    val client = new CloudSolrClient.Builder().withZkHost(ZK_HOST).build
+    client.setDefaultCollection(AppConfig.COLLECTION_NAME)
 
     //create single node client
-    val client = new HttpSolrClient.Builder(SOLR_CORE_URL).build()
+    //val client = new HttpSolrClient.Builder(SOLR_CORE_URL).build()
 
     //get all posts
     println("Getting all stackoverflow posts")
@@ -69,7 +69,7 @@ object Index extends App {
     doc.setField("id", p.site + p.id)
     doc.setField("postType", if(p.postTypeId == "1") "Q" else "A")
     doc.setField("creationDate", getSolrDate(p.creationDate))
-    doc.setField("score", p.score)
+    doc.setField("postScore", p.score)
     doc.setField("body", p.body)
     doc.setField("owner", p.ownerUserId)
     doc.setField("lastActivityDate", getSolrDate(p.lastActivityDate))
