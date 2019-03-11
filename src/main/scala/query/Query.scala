@@ -1,5 +1,5 @@
 package query
 
-class Query {
+object Query extends App {
 
 }

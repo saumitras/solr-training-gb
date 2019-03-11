@@ -1,6 +1,5 @@
 package index
 
-
 import java.sql.Timestamp
 import java.text.SimpleDateFormat
 
@@ -32,15 +31,15 @@ object MinRf extends App {
 
     val docs = posts.map(postToSolrDoc).asJavaCollection
 
-    //creaete an uptateRequest which will return min_rf in response header
-    println("Sending posts to solr witn MIN_RF")
+    //creaete an updateRequest which will return min_rf in response header
+    println("Sending posts to solr with MIN_RF")
     val req = new UpdateRequest()
     req.setParam(UpdateRequest.MIN_REPFACT, "2")
     req.add(docs)
     val resp = client.request(req)
     println("Response: " + resp)
 
-    val replicationAchieved = client.getMinAchievedReplicationFactor(AppConfig.COLLECTION_NAME, resp))
+    val replicationAchieved = client.getMinAchievedReplicationFactor(AppConfig.COLLECTION_NAME, resp)
     println("Actual replication achieved: " + replicationAchieved)
 
     //commit the changes
@@ -79,7 +78,6 @@ object MinRf extends App {
   }
 
   def getSolrDate(ts:Timestamp) = new SimpleDateFormat("yyyy-MM-dd'T'hh:mm:ss'Z'").format(ts)
-
 
 
 }

@@ -1,5 +1,7 @@
 package atomicupdate
 
-class AtomicUpdate {
+object AtomicUpdate extends App {
+
+
 
 }
