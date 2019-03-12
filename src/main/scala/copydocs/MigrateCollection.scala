@@ -7,7 +7,6 @@ import org.apache.solr.common.SolrDocument
 import org.apache.solr.common.SolrInputDocument
 import scala.collection.JavaConversions._
 
-
 object MigrateCollection {
 
   val sourceZk = "localhost:2181"

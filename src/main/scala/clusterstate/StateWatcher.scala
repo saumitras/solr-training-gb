@@ -1,5 +1,0 @@
-package clusterstate
-
-class StateWatcher {
-
-}
