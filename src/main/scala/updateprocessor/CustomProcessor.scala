@@ -14,7 +14,6 @@ import org.apache.solr.update.processor.{UpdateRequestProcessor, UpdateRequestPr
    <processor class="solr.RunUpdateProcessorFactory" />
  </updateRequestProcessorChain>
 
-*/
 
 class PopularPostProcessorFactory extends UpdateRequestProcessorFactory {
   override def getInstance(solrQueryRequest: SolrQueryRequest, solrQueryResponse: SolrQueryResponse,
@@ -34,3 +33,5 @@ class PopularPostProcessor(val next: UpdateRequestProcessor) extends UpdateReque
   }
 }
 
+
+*/
