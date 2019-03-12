@@ -1,5 +1,0 @@
-package curator
-
-class Util {
-
-}
