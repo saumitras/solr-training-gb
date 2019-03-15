@@ -23,11 +23,11 @@ object Index extends App {
   def start() = {
     println("Creating solr client")
     //create cloud client
-    //val client = new CloudSolrClient.Builder().withZkHost(ZK_HOST).build
-    //client.setDefaultCollection(AppConfig.COLLECTION_NAME)
+    val client = new CloudSolrClient.Builder().withZkHost(ZK_HOST).build
+    client.setDefaultCollection(AppConfig.COLLECTION_NAME)
 
     //create single node client
-    val client = new HttpSolrClient.Builder(SOLR_CORE_URL).build()
+    //val client = new HttpSolrClient.Builder(SOLR_CORE_URL).build()
 
     //get all posts
     println("Getting all stackoverflow posts")
