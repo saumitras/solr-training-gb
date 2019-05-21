@@ -79,6 +79,8 @@ After replicas are created, delete original shard replicas which are co-located 
 
 #### Delete original shard replicas
 
+Delete those replicas which were created on original machine to distribute the load. Name of replica can be obtained by `clusterstatus` API: `http://localhost:6555/solr/admin/collections?action=clusterstatus&wt=json`
+
 ```
 localhost:6555/solr/admin/collections?action=DELETEREPLICA
 &collection=E---siemens-siemens-podv50___1557964800___1558223999
