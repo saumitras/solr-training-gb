@@ -3,7 +3,10 @@
 Give `async=<REQUEST_ID>` at the end. `REQUEST_ID` can be any random unique number. 
 
 ```
-http://localhost:6555/solr/admin/collections?action=splitshard&collection=E---siemens-siemens-podv50___1557964800___1558223999&shard=shard1&async=1000
+http://localhost:6555/solr/admin/collections?action=splitshard
+&collection=E---siemens-siemens-podv50___1557964800___1558223999
+&shard=shard1
+&async=1000
 ```
 
 #### Check request status 
@@ -15,12 +18,12 @@ http://localhost:6555/solr/admin/collections?action=REQUESTSTATUS&requestid=1000
 ```
 <response>
 <lst name="responseHeader">
-<int name="status">0</int>
-<int name="QTime">2</int>
+    <int name="status">0</int>
+    <int name="QTime">2</int>
 </lst>
 <lst name="status">
-<str name="state">running</str>
-<str name="msg">found [1000] in running tasks</str>
+    <str name="state">running</str>
+    <str name="msg">found [1000] in running tasks</str>
 </lst>
 </response>
 ```
@@ -45,7 +48,7 @@ aclVersion = 0
 ephemeralOwner = 0x0
 dataLength = 138
 numChildren = 0
-
+```
 
 You can also directly monitor the size of newly created shards to see progress. 
 
@@ -62,13 +65,14 @@ After splitting is done, add a replica for each newly created shard on a *separa
 
 #### Add replica for each shard on a new node
 
-
 ```
-localhost:6555/solr/admin/collections?action=ADDREPLICA&collection=E---siemens-siemens-podv50___1557964800___1558223999&shard=shard1_0_0&node=gbp-solr-42.ec2-east1.glassbeam.com:8983_solr
+localhost:6555/solr/admin/collections?action=ADDREPLICA
+&collection=E---siemens-siemens-podv50___1557964800___1558223999
+&shard=shard1_0_0
+&node=gbp-solr-42.ec2-east1.glassbeam.com:8983_solr
 ```
 
 This has to be done for each shard dependending on how many replicas are needed. Mostly there are 2 replicas. So for each shard, execute above query 2 time. Make sure to change `node` for each replica
-
 
 After replicas are created, delete original shard replicas which are co-located on same machine
 
@@ -76,7 +80,9 @@ After replicas are created, delete original shard replicas which are co-located 
 #### Delete original shard replicas
 
 ```
-localhost:6555/solr/admin/collections?action=DELETEREPLICA&collection=E---siemens-siemens-podv50___1557964800___1558223999&shard=shard1_0_1
+localhost:6555/solr/admin/collections?action=DELETEREPLICA
+&collection=E---siemens-siemens-podv50___1557964800___1558223999
+&shard=shard1_0_1
 &replica=core_node5
 ```
 
