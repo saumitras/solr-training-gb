@@ -88,3 +88,15 @@ localhost:6555/solr/admin/collections?action=DELETEREPLICA
 &replica=core_node5
 ```
 
+#### Delete inaactive shards
+
+After splitting, source shards status will become inactive. Verify that in `clusterstatus` API response. Delete all inactive shards in the end as cleanup.
+
+```
+localhost:6555/solr/admin/collections?action=DELETESHARD
+&shard=shard1
+&collection=E---siemens-siemens-podv50___1557964800___1558223999
+```
+
+
+
