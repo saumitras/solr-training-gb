@@ -68,11 +68,11 @@
 
 **Fuzzy search**
 
-http://localhost:8983/solr/so_collection/select?q=body:improvee~0.7
+```http://localhost:8983/solr/so_collection/select?q=body:improvee~0.7```
 
 **Proximity search**
 
-http://localhost:8983/solr/so_collection/select?q=body:"databases sqlite"~2
+```http://localhost:8983/solr/so_collection/select?q=body:"databases sqlite"~2```
 
 **Change query parser**
 
