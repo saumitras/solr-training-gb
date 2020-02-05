@@ -64,9 +64,7 @@
 
 **Facet range query**
 
-```http://localhost:8983/solr/so_collection/select?q=*:*&rows=0&facet=true&facet.range=creationDate
-&facet.range.start=2016-03-22T01:33:06Z&facet.range.end=2019-04-01T00:00:00Z
-&facet.range.gap=%2B1YEAR```
+```http://localhost:8983/solr/so_collection/select?q=*:*&rows=0&facet=true&facet.range=creationDate&facet.range.start=2016-03-22T01:33:06Z&facet.range.end=2019-04-01T00:00:00Z&facet.range.gap=%2B1YEAR```
 
 **Fuzzy search**
 
