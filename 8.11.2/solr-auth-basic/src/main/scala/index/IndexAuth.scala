@@ -7,6 +7,9 @@ import scala.collection.JavaConverters._
 
 object IndexAuth extends App {
 
+  // Before running this, upload security.json (located in home dir of this project) to zookeeper using command below:
+  //    bin/solr zk cp ./security.json zk:security.json -z localhost:2181
+
   val zkHostList = List("localhost:2181").asJava
   val userName = "solr"
   val password = "SolrRocks"
@@ -14,7 +17,6 @@ object IndexAuth extends App {
   val numDocs = 5
 
   println("Creating solr client")
-
   val http2ClientBuilder = new Http2SolrClient.Builder
   http2ClientBuilder.withBasicAuthCredentials(userName, password).build()
 
