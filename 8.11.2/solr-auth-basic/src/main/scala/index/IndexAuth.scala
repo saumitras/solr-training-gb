@@ -11,18 +11,22 @@ object IndexAuth extends App {
   val userName = "solr"
   val password = "SolrRocks"
   val collectionName = "test1"
+  val numDocs = 5
+
+  println("Creating solr client")
 
   val http2ClientBuilder = new Http2SolrClient.Builder
   http2ClientBuilder.withBasicAuthCredentials(userName, password).build()
 
   val client:CloudHttp2SolrClient = new CloudHttp2SolrClient.Builder(zkHostList,  Optional.empty())
-    .withInternalClientBuilder(http2ClientBuilder).build()
+    .withInternalClientBuilder(http2ClientBuilder)
+    .build()
 
-  println("Creating solr client")
+  println("Set a default collection")
   client.setDefaultCollection(collectionName)
 
   println("Adding document")
-  for (i <- 1 until 10) {
+  for (i <- 1 to numDocs) {
     val doc = new SolrInputDocument()
     doc.addField("id", s"doc-$i-${System.nanoTime()}")
     client.add(doc)
