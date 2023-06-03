@@ -61,7 +61,7 @@ ssl.keyStore.password=secret
 ssl.clientAuth=need
 ```
 
-## zookeeper-client.properties
+## zookeeper-client.properties for kafka zookeeper-connect.sh
 
 ```
 zookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty
@@ -74,10 +74,24 @@ zookeeper.ssl.keystore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeepe
 zookeeper.ssl.keystore.password=secret
 ```
 
-## CLIENT_JVMFLAGS to be added in zkCli.sh 
+## CLIENT_JVMFLAGS to be added in zookeeper zkCli.sh 
 
 ```
 export CLIENT_JVMFLAGS="
+-Dzookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty 
+-Dzookeeper.client.secure=true 
+-Dzookeeper.ssl.keyStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks 
+-Dzookeeper.ssl.keyStore.password=secret
+-Dzookeeper.ssl.trustStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
+-Dzookeeper.ssl.trustStore.password=secret"
+```
+
+## SOLR_ZK_CREDS_AND_ACLS to be added in solr's zkCli.sh
+
+Location: solr-8.11.2/server/scripts/cloud-scripts/zkcli.sh
+
+```
+SOLR_ZK_CREDS_AND_ACLS="
 -Dzookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty 
 -Dzookeeper.client.secure=true 
 -Dzookeeper.ssl.keyStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks 
@@ -121,3 +135,5 @@ ls /
 [sam, zookeeper]
 
 ```
+
+
