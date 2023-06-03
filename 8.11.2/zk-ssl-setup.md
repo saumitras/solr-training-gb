@@ -74,7 +74,32 @@ zookeeper.ssl.keystore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeepe
 zookeeper.ssl.keystore.password=secret
 ```
 
+## CLIENT_JVMFLAGS to be added in zkCli.sh 
+
+```
+export CLIENT_JVMFLAGS="
+-Dzookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty 
+-Dzookeeper.client.secure=true 
+-Dzookeeper.ssl.keyStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks 
+-Dzookeeper.ssl.keyStore.password=secret
+-Dzookeeper.ssl.trustStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
+-Dzookeeper.ssl.trustStore.password=secret"
+```
+
 ## Connect and create a test zkNode
+
+When connecting via kafka's zookeeper shell, configure `zookeeper-client.properties` and use command:
+```
+./zookeeper-shell.sh localhost:2182 -zk-tls-config-file /home/sam/softwares/solr/ssl/apache-zookeeper-3.6.4-bin/conf/zookeeper-client.properties 
+```
+
+When connecting via zookeeper's zkCli.sh, add `CLIENT_JVMFLAGS` vars in zkCli.sh and use command:
+
+```
+~/softwares/solr/ssl/apache-zookeeper-3.6.4-bin/bin/zkCli.sh -server localhost:2182
+```
+
+Verify that writes are working
 
 ```
 $ ./zookeeper-shell.sh localhost:2182 -zk-tls-config-file /home/sam/softwares/solr/ssl/apache-zookeeper-3.6.4-bin/conf/zookeeper-client.properties 
