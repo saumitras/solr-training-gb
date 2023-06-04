@@ -93,7 +93,7 @@ $ keytool -keystore sam.keystore.jks -alias sam -validity 3650 -genkey -keyalg R
 Enter keystore password:  
 Re-enter new password: 
 What is your first and last name?
-  [Unknown]:  Saumitra
+  [Unknown]:  localhost
 What is the name of your organizational unit?
   [Unknown]:  ML
 What is the name of your organization?
@@ -104,8 +104,9 @@ What is the name of your State or Province?
   [Unknown]:  UP
 What is the two-letter country code for this unit?
   [Unknown]:  IN
-Is CN=Saumitra, OU=ML, O=GB, L=HDI, ST=UP, C=IN correct?
+Is CN=localhost, OU=ML, O=GB, L=HDI, ST=UP, C=IN correct?
   [no]:  yes
+
 ```
 
 **4. Create certificate signing request (CSR)**
