@@ -5,9 +5,81 @@
 openssl req -new -x509 -keyout ca-key -out ca-cert -days 3650
 ```
 
+Sample output
+
+```
+Generating a 2048 bit RSA private key
+.......................................+++
+......................................................................................................................................................................+++
+writing new private key to 'ca-key'
+Enter PEM pass phrase:
+Verifying - Enter PEM pass phrase:
+-----
+You are about to be asked to enter information that will be incorporated
+into your certificate request.
+What you are about to enter is what is called a Distinguished Name or a DN.
+There are quite a few fields but you can leave some blank
+For some fields there will be a default value,
+If you enter '.', the field will be left blank.
+-----
+Country Name (2 letter code) [XX]:IN
+State or Province Name (full name) []:UP
+Locality Name (eg, city) [Default City]:HDI
+Organization Name (eg, company) [Default Company Ltd]:GB
+Organizational Unit Name (eg, section) []:ML
+Common Name (eg, your name or your server's hostname) []:localhost
+Email Address []:saumitra.srivastav@glassbeam.com
+```
+
 **2. Create Truststore**
 ```
 keytool -keystore zookeeper.truststore.jks -alias ca-cert -import -file ca-cert
+```
+
+Sample output
+
+```
+$ keytool -keystore sam.truststore.jks -alias ca-cert -import -file ca-cert
+Enter keystore password:  
+Re-enter new password: 
+Owner: EMAILADDRESS=saumitra.srivastav@glassbeam.com, CN=localhost, OU=ML, O=GB, L=HDI, ST=UP, C=IN
+Issuer: EMAILADDRESS=saumitra.srivastav@glassbeam.com, CN=localhost, OU=ML, O=GB, L=HDI, ST=UP, C=IN
+Serial number: 87079ebccb53a53a
+Valid from: Sun Jun 04 05:29:24 UTC 2023 until: Wed Jun 01 05:29:24 UTC 2033
+Certificate fingerprints:
+	 SHA1: 51:9A:E0:B9:D0:99:BC:F3:7E:3D:8F:DC:A7:83:E7:57:21:8F:AD:41
+	 SHA256: D9:51:89:4F:15:F1:AD:A6:C0:E2:B4:90:1A:BF:75:04:2F:1F:11:DC:98:F3:47:6D:1D:DD:31:F0:25:A1:35:56
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.35 Criticality=false
+AuthorityKeyIdentifier [
+KeyIdentifier [
+0000: FA 4B ED B9 47 B4 7A 81   5C 07 CA 4F A6 1C 40 E9  .K..G.z.\..O..@.
+0010: 80 52 BB FE                                        .R..
+]
+]
+
+#2: ObjectId: 2.5.29.19 Criticality=false
+BasicConstraints:[
+  CA:true
+  PathLen:2147483647
+]
+
+#3: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: FA 4B ED B9 47 B4 7A 81   5C 07 CA 4F A6 1C 40 E9  .K..G.z.\..O..@.
+0010: 80 52 BB FE                                        .R..
+]
+]
+
+Trust this certificate? [no]:  yes
+Certificate was added to keystore
+
 ```
 
 **3. Create Keystore**
@@ -15,9 +87,36 @@ keytool -keystore zookeeper.truststore.jks -alias ca-cert -import -file ca-cert
 keytool -keystore zookeeper.keystore.jks -alias zookeeper -validity 3650 -genkey -keyalg RSA -ext SAN=dns:localhost
 ```
 
+Sample output
+```
+$ keytool -keystore sam.keystore.jks -alias sam -validity 3650 -genkey -keyalg RSA -ext SAN=dns:localhost
+Enter keystore password:  
+Re-enter new password: 
+What is your first and last name?
+  [Unknown]:  Saumitra
+What is the name of your organizational unit?
+  [Unknown]:  ML
+What is the name of your organization?
+  [Unknown]:  GB
+What is the name of your City or Locality?
+  [Unknown]:  HDI
+What is the name of your State or Province?
+  [Unknown]:  UP
+What is the two-letter country code for this unit?
+  [Unknown]:  IN
+Is CN=Saumitra, OU=ML, O=GB, L=HDI, ST=UP, C=IN correct?
+  [no]:  yes
+```
+
 **4. Create certificate signing request (CSR)**
 ```
 keytool -keystore zookeeper.keystore.jks -alias zookeeper -certreq -file ca-request-zookeeper
+```
+
+Sample output
+```
+$ keytool -keystore sam.keystore.jks -alias sam -certreq -file ca-request-sam
+Enter keystore password:  
 ```
 
 **5. Sign the CSR**
@@ -25,9 +124,63 @@ keytool -keystore zookeeper.keystore.jks -alias zookeeper -certreq -file ca-requ
 openssl x509 -req -CA ca-cert -CAkey ca-key -in ca-request-zookeeper -out ca-signed-zookeeper -days 3650 -CAcreateserial
 ```
 
+Sample output
+```
+$ openssl x509 -req -CA ca-cert -CAkey ca-key -in ca-request-sam -out ca-signed-sam -days 3650 -CAcreateserial
+Signature ok
+subject=/C=IN/ST=UP/L=HDI/O=GB/OU=ML/CN=Saumitra
+Getting CA Private Key
+Enter pass phrase for ca-key:
+```
+
 **6. Import the CA into Keystore**
 ```
 keytool -keystore zookeeper.keystore.jks -alias ca-cert -import -file ca-cert
+```
+
+Sample output
+```
+$ keytool -keystore sam.keystore.jks -alias ca-cert -import -file ca-cert
+Enter keystore password:  
+Owner: EMAILADDRESS=saumitra.srivastav@glassbeam.com, CN=localhost, OU=ML, O=GB, L=HDI, ST=UP, C=IN
+Issuer: EMAILADDRESS=saumitra.srivastav@glassbeam.com, CN=localhost, OU=ML, O=GB, L=HDI, ST=UP, C=IN
+Serial number: 87079ebccb53a53a
+Valid from: Sun Jun 04 05:29:24 UTC 2023 until: Wed Jun 01 05:29:24 UTC 2033
+Certificate fingerprints:
+	 SHA1: 51:9A:E0:B9:D0:99:BC:F3:7E:3D:8F:DC:A7:83:E7:57:21:8F:AD:41
+	 SHA256: D9:51:89:4F:15:F1:AD:A6:C0:E2:B4:90:1A:BF:75:04:2F:1F:11:DC:98:F3:47:6D:1D:DD:31:F0:25:A1:35:56
+Signature algorithm name: SHA256withRSA
+Subject Public Key Algorithm: 2048-bit RSA key
+Version: 3
+
+Extensions: 
+
+#1: ObjectId: 2.5.29.35 Criticality=false
+AuthorityKeyIdentifier [
+KeyIdentifier [
+0000: FA 4B ED B9 47 B4 7A 81   5C 07 CA 4F A6 1C 40 E9  .K..G.z.\..O..@.
+0010: 80 52 BB FE                                        .R..
+]
+]
+
+#2: ObjectId: 2.5.29.19 Criticality=false
+BasicConstraints:[
+  CA:true
+  PathLen:2147483647
+]
+
+#3: ObjectId: 2.5.29.14 Criticality=false
+SubjectKeyIdentifier [
+KeyIdentifier [
+0000: FA 4B ED B9 47 B4 7A 81   5C 07 CA 4F A6 1C 40 E9  .K..G.z.\..O..@.
+0010: 80 52 BB FE                                        .R..
+]
+]
+
+Trust this certificate? [no]:  yes
+Certificate was added to keystore
+You have mail in /var/spool/mail/gbt
+
 ```
 
 **7. Import the signed certificate from step 5 into Keystore**
@@ -35,6 +188,12 @@ keytool -keystore zookeeper.keystore.jks -alias ca-cert -import -file ca-cert
 keytool -keystore zookeeper.keystore.jks -alias zookeeper -import -file ca-signed-zookeeper
 ```
 
+Sample output
+```
+$ keytool -keystore sam.keystore.jks -alias sam -import -file ca-signed-sam
+Enter keystore password:  
+Certificate reply was installed in keystore
+```
 
 
 ## zoo.cfg
