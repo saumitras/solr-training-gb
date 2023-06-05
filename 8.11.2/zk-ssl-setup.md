@@ -296,4 +296,46 @@ ls /
 
 ```
 
+## Add zk ssl config in solr start script
 
+Add following in `SOLR_START_OPTS` in `solr-8.11.2/bin/solr`. You can set it through some env var too:
+
+```
+ "-Dzookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty" \
+ "-Dzookeeper.client.secure=true" \
+ "-Dzookeeper.ssl.keyStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks" \
+ "-Dzookeeper.ssl.keyStore.password=secret" \
+ "-Dzookeeper.ssl.trustStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks" \
+ "-Dzookeeper.ssl.trustStore.password=secret" \
+```
+
+Example full command:
+
+```
+  SOLR_START_OPTS=('-server' "${JAVA_MEM_OPTS[@]}" "${GC_TUNE[@]}" "${GC_LOG_OPTS[@]}" "${IP_ACL_OPTS[@]}" \
+    "${REMOTE_JMX_OPTS[@]}" "${CLOUD_MODE_OPTS[@]}" $SOLR_LOG_LEVEL_OPT -Dsolr.log.dir="$SOLR_LOGS_DIR" \
+    "-Djetty.port=$SOLR_PORT" "-DSTOP.PORT=$stop_port" "-DSTOP.KEY=$STOP_KEY" \
+    # '-OmitStackTraceInFastThrow' ensures stack traces in errors,
+    # users who don't care about useful error msgs can override in SOLR_OPTS with +OmitStackTraceInFastThrow
+    "${SOLR_HOST_ARG[@]}" "-Duser.timezone=$SOLR_TIMEZONE" "-XX:-OmitStackTraceInFastThrow" \
+    "-XX:OnOutOfMemoryError=$SOLR_TIP/bin/oom_solr.sh $SOLR_PORT $SOLR_LOGS_DIR" \
+    "-Djetty.home=$SOLR_SERVER_DIR" "-Dsolr.solr.home=$SOLR_HOME" "-Dsolr.data.home=$SOLR_DATA_HOME" "-Dsolr.install.dir=$SOLR_TIP" \
+    "-Dzookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty" "-Dzookeeper.client.secure=true" "-Dzookeeper.ssl.keyStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks" \
+    "-Dzookeeper.ssl.keyStore.password=secret" "-Dzookeeper.ssl.trustStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks"  "-Dzookeeper.ssl.trustStore.password=secret" \
+    "-Dsolr.default.confdir=$DEFAULT_CONFDIR" "${LOG4J_CONFIG[@]}" "${SOLR_OPTS[@]}" "${SECURITY_MANAGER_OPTS[@]}")
+```
+
+## Props for accessing through JAVA client
+
+Following props need to be set for zk:
+
+```
+  System.setProperty("zookeeper.clientCnxnSocket", "org.apache.zookeeper.ClientCnxnSocketNetty")
+  System.setProperty("zookeeper.client.secure", "true")
+  System.setProperty("zookeeper.ssl.keyStore.location", AppConf.SSL.keyStoreLocation)
+  System.setProperty("zookeeper.ssl.keyStore.password", AppConf.SSL.keyStorePass)
+  System.setProperty("zookeeper.ssl.trustStore.location", AppConf.SSL.trustStoreLocation)
+  System.setProperty("zookeeper.ssl.trustStore.password", AppConf.SSL.trustStorePass)
+```
+
+Refer [this code example](https://github.com/saumitras/gbssl/blob/bf39ba85ef0d33e6707dc50068a1402972fb8308/src/main/scala/solr/SolrSSLClient.scala#L28)
