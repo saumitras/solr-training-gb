@@ -196,6 +196,18 @@ Enter keystore password:
 Certificate reply was installed in keystore
 ```
 
+## zookeeper-client.properties for kafka zookeeper-connect.sh
+
+```
+zookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty
+zookeeper.ssl.client.enable=true
+zookeeper.ssl.protocol=TLSv1.2
+
+zookeeper.ssl.truststore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
+zookeeper.ssl.truststore.password=secret
+zookeeper.ssl.keystore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks
+zookeeper.ssl.keystore.password=secret
+```
 
 ## zoo.cfg
 
@@ -221,18 +233,7 @@ ssl.keyStore.password=secret
 ssl.clientAuth=need
 ```
 
-## zookeeper-client.properties for kafka zookeeper-connect.sh
 
-```
-zookeeper.clientCnxnSocket=org.apache.zookeeper.ClientCnxnSocketNetty
-zookeeper.ssl.client.enable=true
-zookeeper.ssl.protocol=TLSv1.2
-
-zookeeper.ssl.truststore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
-zookeeper.ssl.truststore.password=secret
-zookeeper.ssl.keystore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks
-zookeeper.ssl.keystore.password=secret
-```
 
 ## CLIENT_JVMFLAGS to be added in zookeeper zkCli.sh 
 
@@ -259,6 +260,7 @@ SOLR_ZK_CREDS_AND_ACLS="
 -Dzookeeper.ssl.trustStore.location=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
 -Dzookeeper.ssl.trustStore.password=secret"
 ```
+
 
 ## Connect and create a test zkNode
 
@@ -325,7 +327,7 @@ Example full command:
     "-Dsolr.default.confdir=$DEFAULT_CONFDIR" "${LOG4J_CONFIG[@]}" "${SOLR_OPTS[@]}" "${SECURITY_MANAGER_OPTS[@]}")
 ```
 
-## Props for accessing through JAVA client
+## Props for accessing SSL enabled ZK through JAVA client
 
 Following props need to be set for zk:
 
@@ -339,3 +341,41 @@ Following props need to be set for zk:
 ```
 
 Refer [this code example](https://github.com/saumitras/gbssl/blob/bf39ba85ef0d33e6707dc50068a1402972fb8308/src/main/scala/solr/SolrSSLClient.scala#L28)
+
+
+
+## Set urlScheme clusterprop to https
+
+If you have enabled SSL in solr too, run this before starting solr:
+
+```
+~/softwares/solr/ssl/solr-8.11.2/server/scripts/cloud-scripts/zkcli.sh -zkhost localhost:2182 -cmd clusterprop -name urlScheme -val https
+```
+
+## Solr SSL config (this is separate from zk SSL)
+
+Configure below for `bin/solr.in.sh`:
+
+```
+SOLR_SSL_ENABLED=true
+SOLR_SSL_KEY_STORE=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jks
+SOLR_SSL_KEY_STORE_PASSWORD=secret
+SOLR_SSL_TRUST_STORE=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
+SOLR_SSL_TRUST_STORE_PASSWORD=secret
+SOLR_SSL_NEED_CLIENT_AUTH=false
+SOLR_SSL_WANT_CLIENT_AUTH=false
+SOLR_SSL_CLIENT_HOSTNAME_VERIFICATION=false
+SOLR_SSL_CHECK_PEER_NAME=true
+SOLR_SSL_KEY_STORE_TYPE=JKS
+SOLR_SSL_TRUST_STORE_TYPE=JKS
+```
+
+## Props for accessing SSL enabled Solr through JAVA client
+
+```
+System.setProperty("javax.net.ssl.keyStore", AppConf.SSL.keyStoreLocation)
+System.setProperty("javax.net.ssl.keyStorePassword", AppConf.SSL.keyStorePass)
+System.setProperty("javax.net.ssl.trustStore", AppConf.SSL.trustStoreLocation)
+System.setProperty("javax.net.ssl.trustStorePassword", AppConf.SSL.trustStorePass)
+```
+
