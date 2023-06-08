@@ -196,6 +196,23 @@ Enter keystore password:
 Certificate reply was installed in keystore
 ```
 
+## Cert store contents
+
+After running above commands, you should have following files in your directory
+
+```
+sam@gb:~/softwares/solr/ssl/store2/ssl$ ll
+total 36
+drwxrwxr-x 2 sam sam 4096 Jun  2 21:15 ./
+drwxrwxr-x 3 sam sam 4096 Jun  2 17:25 ../
+-rw-rw-r-- 1 sam sam 1424 Jun  2 17:31 ca-cert
+-rw------- 1 sam sam 1854 Jun  2 17:30 ca-key
+-rw-rw-r-- 1 sam sam 1067 Jun  2 17:39 ca-request-sam
+-rw-rw-r-- 1 sam sam 1237 Jun  2 17:41 ca-signed-sam
+-rw-rw-r-- 1 sam sam 5029 Jun  2 17:42 sam.keystore.jks
+-rw-rw-r-- 1 sam sam 1306 Jun  2 17:34 sam.truststore.jks
+```
+
 ## zookeeper-client.properties for kafka zookeeper-connect.sh
 
 ```
@@ -362,7 +379,7 @@ SOLR_SSL_KEY_STORE=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.keystore.jk
 SOLR_SSL_KEY_STORE_PASSWORD=secret
 SOLR_SSL_TRUST_STORE=/home/sam/softwares/solr/ssl/store2/ssl/zookeeper.truststore.jks
 SOLR_SSL_TRUST_STORE_PASSWORD=secret
-SOLR_SSL_NEED_CLIENT_AUTH=false
+SOLR_SSL_NEED_CLIENT_AUTH=true
 SOLR_SSL_WANT_CLIENT_AUTH=false
 SOLR_SSL_CLIENT_HOSTNAME_VERIFICATION=false
 SOLR_SSL_CHECK_PEER_NAME=true
@@ -378,4 +395,11 @@ System.setProperty("javax.net.ssl.keyStorePassword", AppConf.SSL.keyStorePass)
 System.setProperty("javax.net.ssl.trustStore", AppConf.SSL.trustStoreLocation)
 System.setProperty("javax.net.ssl.trustStorePassword", AppConf.SSL.trustStorePass)
 ```
+
+## Calling Solr curl API using certs
+
+```
+curl --cacert ca-cert --cert ca-cert --key ca-key --pass secret https://localhost:8983/solr/admin/collections?action=list
+```
+
 
