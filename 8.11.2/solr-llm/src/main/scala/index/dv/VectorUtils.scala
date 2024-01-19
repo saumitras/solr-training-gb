@@ -4,6 +4,7 @@ import com.johnsnowlabs.nlp.{DocumentAssembler, EmbeddingsFinisher}
 import com.johnsnowlabs.nlp.annotators.Tokenizer
 import com.johnsnowlabs.nlp.annotators.sbd.pragmatic.SentenceDetector
 import org.apache.spark.ml.Pipeline
+import org.apache.spark.ml.linalg.DenseVector
 import org.apache.spark.sql.{DataFrame, SparkSession}
 import org.apache.spark.sql.functions._
 
@@ -12,7 +13,7 @@ object VectorUtils extends App {
   val resp = getVectorRepresentationOfTextUsingBERT("This is a test sentence").mkString("Array(", ", ", ")")
   println(resp)
 
-  def getVectorRepresentationOfTextUsingBERT(text: String) = {
+  def getVectorRepresentationOfTextUsingBERT(text: String):Array[Seq[Double]] = {
     val spark = SparkSession.builder()
       .appName("BERT Example")
       .master("local[*]")
@@ -51,7 +52,8 @@ object VectorUtils extends App {
     // Extract the embeddings from the WordEmbeddings
     val vectors = result.select("finished_bert")
       .collect()
-      .map(row => row.getAs[Seq[Array[Float]]](0))
+      .map(row => row.getAs[Seq[DenseVector]](0).map(_.toArray).flatten)
+
 
     vectors
   }
