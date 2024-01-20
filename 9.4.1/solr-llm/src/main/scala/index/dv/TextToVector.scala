@@ -10,57 +10,63 @@ import org.apache.spark.sql.SparkSession
 
 object TextToVector extends App {
 
-  val resp = getVectorRepresentationOfTextUsingBERT(List("sentence1", "sentence2"))
-  println(resp)
-//  println(resp(0).mkString(","))
-//  println(resp.length)
-
-
-def getVectorRepresentationOfTextUsingBERT(texts: List[String]) = {
-  val spark = SparkSession.builder()
+  val spark: SparkSession = SparkSession.builder()
     .appName("VectorUtils")
     .master("local[*]")
     .getOrCreate()
 
   import spark.implicits._
 
-  val documentAssembler = new DocumentAssembler()
-    .setInputCol("text")
-    .setOutputCol("document")
+  val bertEmbeddings: BertEmbeddings = BertEmbeddings.pretrained("bert_base_uncased", "en")
 
-  val sentenceDetector = new SentenceDetector()
-    .setInputCols("document")
-    .setOutputCol("sentence")
+  for(i <- 1 to 5) {
+    println(s"Running $i")
+    val t = System.currentTimeMillis()
+    val resp = getVectorRepresentationOfTextUsingBERT(List("sentence1", "sentence2"))
+    println(resp.map(_.length))
+    println(s"BERT vectorization took ${System.currentTimeMillis() - t} ms")
+  }
 
-  val tokenizer = new Tokenizer()
-    .setInputCols("sentence")
-    .setOutputCol("token")
+  def getVectorRepresentationOfTextUsingBERT(texts: List[String]) = {
 
-  val bertEmbeddings = BertEmbeddings.pretrained("bert_base_uncased", "en")
-    .setInputCols("document", "token")
-    .setOutputCol("bert")
+    val documentAssembler = new DocumentAssembler()
+      .setInputCol("text")
+      .setOutputCol("document")
 
-  val embeddingsFinisher = new EmbeddingsFinisher()
-    .setInputCols("bert")
-    .setOutputCols("finished_bert")
-    .setOutputAsVector(true)
+    val sentenceDetector = new SentenceDetector()
+      .setInputCols("document")
+      .setOutputCol("sentence")
 
-  val pipeline = new Pipeline()
-    .setStages(Array(documentAssembler, sentenceDetector, tokenizer, bertEmbeddings, embeddingsFinisher))
+    val tokenizer = new Tokenizer()
+      .setInputCols("sentence")
+      .setOutputCol("token")
 
-  val data = texts.toDF("text")
-  val model = pipeline.fit(data)
-  val result = model.transform(data)
+    // Use the loaded BERT model
+    bertEmbeddings
+      .setInputCols("document", "token")
+      .setOutputCol("bert")
 
-  val vectors = result.select("finished_bert")
-    .collect()
-    .flatMap(row => row.getAs[Seq[DenseVector]](0).map(_.toArray))
+    val embeddingsFinisher = new EmbeddingsFinisher()
+      .setInputCols("bert")
+      .setOutputCols("finished_bert")
+      .setOutputAsVector(true)
 
-  // Average the embeddings for each text
-  val avgVectors = vectors.grouped(vectors.length / texts.length).map(vecGroup => vecGroup.transpose.map(_.sum / vecGroup.length)).toList
+    val pipeline = new Pipeline()
+      .setStages(Array(documentAssembler, sentenceDetector, tokenizer, bertEmbeddings, embeddingsFinisher))
 
-  spark.stop()
+    val data = texts.toDF("text")
+    val model = pipeline.fit(data)
+    val result = model.transform(data)
 
-  avgVectors
-}
+    result.cache()
+
+    val vectors = result.select("finished_bert")
+      .collect()
+      .flatMap(row => row.getAs[Seq[DenseVector]](0).map(_.toArray))
+
+    // Average the embeddings for each text
+    val avgVectors = vectors.grouped(vectors.length / texts.length).map(vecGroup => vecGroup.transpose.map(_.sum / vecGroup.length)).toList
+
+    avgVectors
+  }
 }
