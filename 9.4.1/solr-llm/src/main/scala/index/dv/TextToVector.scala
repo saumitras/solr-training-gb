@@ -10,14 +10,14 @@ import org.apache.spark.sql.SparkSession
 
 object TextToVector extends App {
 
-  val spark: SparkSession = SparkSession.builder()
+  lazy val spark: SparkSession = SparkSession.builder()
     .appName("VectorUtils")
     .master("local[*]")
     .getOrCreate()
 
   import spark.implicits._
 
-  val bertEmbeddings: BertEmbeddings = BertEmbeddings.pretrained("bert_base_uncased", "en")
+  lazy val bertEmbeddings: BertEmbeddings = BertEmbeddings.pretrained("bert_base_uncased", "en")
 
   for(i <- 1 to 5) {
     println(s"Running $i")
