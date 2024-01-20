@@ -59,6 +59,8 @@ def getVectorRepresentationOfTextUsingBERT(texts: List[String]) = {
   // Average the embeddings for each text
   val avgVectors = vectors.grouped(vectors.length / texts.length).map(vecGroup => vecGroup.transpose.map(_.sum / vecGroup.length)).toList
 
+  spark.stop()
+
   avgVectors
 }
 }
